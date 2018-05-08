@@ -3,67 +3,85 @@
 #include "FileStructure.h"
 #include "Key.h"
 
-int getLength(Key* head)
-{
-  int count = 0;
-  Key* temp = head;
-  while (temp != NULL)
+void partition(Key* head, Key * *front, Key * *back)
+ {
+  Key* fast;
+  Key* slow;
+
+  if (head == NULL || head->getPrev() == NULL)
   {
-    count++;
-    temp = temp->getPrev();
+    *front = head; // &a
+    *back = NULL; // &b
+
   }
-  return count;
+  else
+  {
+    slow = head;
+    fast = head->getPrev();
+
+    while (fast != NULL)
+    {
+      fast = fast->getPrev();
+
+      if (fast != NULL)
+      {
+        slow = slow->getPrev();
+        fast = fast->getPrev();
+      }
+    }
+
+    *front = head; // a
+    *back = slow->getPrev(); // b
+    slow->setPrev(NULL);
+  }
+
 }
 
-Key* MergeList(Key* a, Key* b) {
-    Key* result = NULL;
-    if (a == NULL)
-    {
-      return b;
-    }
-    if (b == NULL)
-    {
-      return a;
-    }
-    
-    if (a->getText() > b->getText()) 
-    {
-      result = b;
-      result->setPrev(MergeList(a, b->getPrev()));
-    } 
-    else 
-    {
-      result = a;
-      result->setPrev( MergeList(a->getPrev(), b));
-    }
-    return result;
+Key* mergeLists(Key* a, Key* b) {
+
+  Key* mergedList = NULL;
+
+  if (a == NULL)
+  {
+    return b;
+  }
+  else if (b == NULL)
+  {
+    return a;
+  }
+
+  if (a->getText() <= b->getText())
+  {
+    mergedList = a;
+    mergedList->setPrev(mergeLists(a->getPrev(), b));
+  }
+  else
+  {
+    mergedList = b;
+    mergedList->setPrev(mergeLists(a, b->getPrev()));
+  }
+
+  return mergedList;
+
 }
 
-Key* MergeSort(Key* head)
+void mergeSort(Key* source)
 {
-    Key* oldHead = head;
-    // find the length of the linkedlist
-    int mid = getLength(head) / 2;
-    if (head->getPrev() == NULL)
-    {
-      return head;
-    }
-    // set one pointer to the beginning of the list and another at the next
-    // element after mid
-    while (mid - 1 > 0)
-    {
-      oldHead = oldHead->getPrev();
-      mid--;
-    }
+  Key* head = source;
+  Key* a = NULL;
+  Key* b = NULL;
 
-    Key* newHead = oldHead->getPrev();// make newHead points to the beginning of
-                  // the second half of the list
-    oldHead->setPrev(NULL);// break the list
-    oldHead = head;// make one pointer points at the beginning of the first
-          // half of the list
-    Key* t1 = MergeSort(oldHead);//make recursive calls 
-    Key* t2 = MergeSort(newHead);
-return MergeList(t1, t2); // merge the sorted lists
+  if (head == NULL || head->getPrev() == NULL)
+  {
+    return;
+  }
+
+  partition(head, &a, &b);
+
+  mergeSort(a);
+  mergeSort(b);
+
+  source = mergeLists(a, b);
 
 }
 
@@ -87,13 +105,13 @@ int main()
   // next line is only to show what kind of data we're working with
   // remove this line to increase performance!
   //head.print();
-  k.print(); 
+  k.print();
   std::cout << std::endl;
 
   // sort all data
   // todo: call your sort method(s) here!
   //std::cout << k.getValuePtr()->getPrev()->getPrev()->getPrev()->getText();
-  MergeSort(&k);
+  mergeSort(&k);
   k.print();
 
   // save sorted data into a new file called sorted.bin
