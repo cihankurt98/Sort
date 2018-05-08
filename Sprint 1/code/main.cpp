@@ -3,61 +3,94 @@
 #include "FileStructure.h"
 #include "Key.h"
 
-//Finding the middle element of the list for splitting
-Key* getMiddle(Key* head)
+
+Key* mergeLists(Key* a, Key* b)
+{
+  Key* mergedList = NULL;
+
+  if (a == NULL)
+   {
+    return b;
+  }
+  else if (b == NULL)
+  {
+    return a;
+  }
+  std::cout << a->getText() << b->getText() << std::endl;
+if (a->getText() <= b->getText())
+{
+  mergedList = a;
+  mergedList->setPrev(mergeLists(a->getPrev(), b));
+}
+else
+{
+  mergedList = b;
+  mergedList->setPrev(mergeLists(a, b->getPrev()));
+}
+return mergedList;
+
+}
+
+Key* findMiddle(Key* head)
 {
   if (head == NULL)
   {
-    return head;
+    return NULL;
   }
-
+  Key* slow = head;
   Key* fast = head;
-  Key* slow = fast;
 
-  while (fast->getPrev() != NULL && fast->getPrev()->getPrev() != NULL)
+  while (fast != NULL && fast->getPrev() != NULL)
   {
-    slow = slow->getPrev();
     fast = fast->getPrev()->getPrev();
+    slow = slow->getPrev();
   }
   return slow;
 }
-
-//Merge subroutine to merge two sorted lists
-Key* merge(Key* a, Key* b)
-{
-  Key* dummyHead = NULL;
-  Key* curr = dummyHead;
-  while (a != NULL && b != NULL)
-  {
-    if (a->getText() <= b->getText())
-    {
-      curr->setPrev(a);
-      a = a->getPrev();
-    }
-    else
-    {
-      curr->setPrev(b);
-      b = b->getPrev();
-    }
-    curr = curr->getPrev();
-  }
-  curr->setPrev((a == NULL) ? b : a);
-  return dummyHead->getPrev();
-}
-
-Key* merge_sort(Key* head)
+//Finding the middle element of the list for splitting
+void split(Key* head, Key* first, Key* second)
 {
   if (head == NULL || head->getPrev() == NULL)
   {
-    return head;
+    first = head;
+    second = NULL;
   }
-  Key* middle = getMiddle(head);      //get the middle of the list
-  Key* sHalf = middle->getPrev();
-  middle->setPrev(NULL);   //split the list into two halfs
 
-  return merge(merge_sort(head), merge_sort(sHalf)); //recurse on that
+  Key* middle = findMiddle(head);
+
+  if (middle == NULL)
+  {
+    middle = second;
+  }
+  if (first == NULL)
+  {
+    std::cout<< "error prevention" << std::endl;
+  }
+  first = head;
+  std::cout << first->getText() << std::endl;
+  second = middle->getPrev();
+  middle->setPrev(NULL);
+    first->print();
+    second->print();
 }
 
+void mergeSort(Key* head)
+{
+  Key* tempHead = head;
+  Key* a = NULL;
+  Key* b = NULL;
+
+  if (tempHead == NULL || tempHead->getPrev() == NULL)
+  {
+    return;
+  }
+
+  split(tempHead, a, b);
+  mergeSort(a);
+  mergeSort(b);
+  head = mergeLists(a, b);
+
+}
 
 
 
@@ -68,6 +101,7 @@ int main()
   // f.loadFile("data/gibberish.bin", head);
 
   Key k;
+  k.addValue("calculator");
   k.addValue("eik");
   k.addValue("einsteinium");
   k.addValue("eik");
@@ -76,7 +110,7 @@ int main()
   k.addValue("eigendom");
   k.addValue("taxibaan");
   k.addValue("tafel");
-  k.addValue("calculator");
+ 
 
   // next line is only to show what kind of data we're working with
   // remove this line to increase performance!
@@ -87,8 +121,8 @@ int main()
   // sort all data
   // todo: call your sort method(s) here!
   //std::cout << k.getValuePtr()->getPrev()->getPrev()->getPrev()->getText();
-  merge_sort(&k);
-  k.print();
+  mergeSort(&k);
+
 
   // save sorted data into a new file called sorted.bin
   f.saveFile(head, "sorted.bin");
