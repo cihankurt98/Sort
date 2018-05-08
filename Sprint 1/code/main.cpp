@@ -3,86 +3,57 @@
 #include "FileStructure.h"
 #include "Key.h"
 
-void partition(Key* head, Key * *front, Key * *back)
- {
-  Key* fast;
-  Key* slow;
-
-  if (head == NULL || head->getPrev() == NULL)
-  {
-    *front = head; // &a
-    *back = NULL; // &b
-
-  }
-  else
-  {
-    slow = head;
-    fast = head->getPrev();
-
-    while (fast != NULL)
-    {
-      fast = fast->getPrev();
-
-      if (fast != NULL)
-      {
-        slow = slow->getPrev();
-        fast = fast->getPrev();
-      }
-    }
-
-    *front = head; // a
-    *back = slow->getPrev(); // b
-    slow->setPrev(NULL);
-  }
-
-}
-
-Key* mergeLists(Key* a, Key* b) {
-
-  Key* mergedList = NULL;
-
-  if (a == NULL)
-  {
-    return b;
-  }
-  else if (b == NULL)
-  {
-    return a;
-  }
-
-  if (a->getText() <= b->getText())
-  {
-    mergedList = a;
-    mergedList->setPrev(mergeLists(a->getPrev(), b));
-  }
-  else
-  {
-    mergedList = b;
-    mergedList->setPrev(mergeLists(a, b->getPrev()));
-  }
-
-  return mergedList;
-
-}
-
-void mergeSort(Key* source)
+void quickSort(Key* head)
 {
-  Key* head = source;
-  Key* a = NULL;
-  Key* b = NULL;
-
-  if (head == NULL || head->getPrev() == NULL)
+  if  (head == NULL || head->getPrev() == NULL)
   {
     return;
   }
 
-  partition(head, &a, &b);
+  Key *lhs = NULL;
+  Key  **pplhs = &lhs;
+  Key *rhs = NULL;
+  Key **pprhs = &rhs;
+  Key *pvt = head;
+  head = head->getPrev();
+  std::cout << head->getText() << std::endl;
+  pvt->setPrev(NULL);
 
-  mergeSort(a);
-  mergeSort(b);
+  while (head != NULL)
+  {
+    std::cout << head->getText() << pvt->getText() << std::endl;
+    if (head->getText() < pvt->getText())
+    {
+      *pplhs = head->getPrev(); // tack on lhs list end
+    }
+    else
+    {
+      *pprhs = head->getPrev(); // tack on rhs list end
+      std::cout << pprhs->getText() << std::endl;
+    }
+    head = head->getPrev();
+  }
 
-  source = mergeLists(a, b);
+  // terminate both list. note that the pivot is still
+  //  unlinked, and will remain so until we merge
+  *pplhs = NULL;
+  *pprhs = NULL;
 
+  // invoke on sublists.
+  quickSort(lhs);
+  quickSort(rhs);
+
+  // find end of lhs list, slip the pivot into  position, then
+  //  tack on the rhs list.
+  while (*pplhs != NULL)
+  {
+    *pplhs = (*pplhs)->getPrev();
+    *pplhs = pvt;
+    pvt->setPrev(rhs);
+  }
+
+  // set final output
+  head = lhs;
 }
 
 int main()
@@ -111,7 +82,7 @@ int main()
   // sort all data
   // todo: call your sort method(s) here!
   //std::cout << k.getValuePtr()->getPrev()->getPrev()->getPrev()->getText();
-  mergeSort(&k);
+  quickSort(&k);
   k.print();
 
   // save sorted data into a new file called sorted.bin
