@@ -3,58 +3,63 @@
 #include "FileStructure.h"
 #include "Key.h"
 
-void quickSort(Key* head)
+//Finding the middle element of the list for splitting
+Key* getMiddle(Key* head)
 {
-  if  (head == NULL || head->getPrev() == NULL)
+  if (head == NULL)
   {
-    return;
+    return head;
   }
 
-  Key *lhs = NULL;
-  Key  **pplhs = &lhs;
-  Key *rhs = NULL;
-  Key **pprhs = &rhs;
-  Key *pvt = head;
-  head = head->getPrev();
-  std::cout << head->getText() << std::endl;
-  pvt->setPrev(NULL);
+  Key* fast = head;
+  Key* slow = fast;
 
-  while (head != NULL)
+  while (fast->getPrev() != NULL && fast->getPrev()->getPrev() != NULL)
   {
-    std::cout << head->getText() << pvt->getText() << std::endl;
-    if (head->getText() < pvt->getText())
+    slow = slow->getPrev();
+    fast = fast->getPrev()->getPrev();
+  }
+  return slow;
+}
+
+//Merge subroutine to merge two sorted lists
+Key* merge(Key* a, Key* b)
+{
+  Key* dummyHead = NULL;
+  Key* curr = dummyHead;
+  while (a != NULL && b != NULL)
+  {
+    if (a->getText() <= b->getText())
     {
-      *pplhs = head->getPrev(); // tack on lhs list end
+      curr->setPrev(a);
+      a = a->getPrev();
     }
     else
     {
-      *pprhs = head->getPrev(); // tack on rhs list end
-      std::cout << pprhs->getText() << std::endl;
+      curr->setPrev(b);
+      b = b->getPrev();
     }
-    head = head->getPrev();
+    curr = curr->getPrev();
   }
-
-  // terminate both list. note that the pivot is still
-  //  unlinked, and will remain so until we merge
-  *pplhs = NULL;
-  *pprhs = NULL;
-
-  // invoke on sublists.
-  quickSort(lhs);
-  quickSort(rhs);
-
-  // find end of lhs list, slip the pivot into  position, then
-  //  tack on the rhs list.
-  while (*pplhs != NULL)
-  {
-    *pplhs = (*pplhs)->getPrev();
-    *pplhs = pvt;
-    pvt->setPrev(rhs);
-  }
-
-  // set final output
-  head = lhs;
+  curr->setPrev((a == NULL) ? b : a);
+  return dummyHead->getPrev();
 }
+
+Key* merge_sort(Key* head)
+{
+  if (head == NULL || head->getPrev() == NULL)
+  {
+    return head;
+  }
+  Key* middle = getMiddle(head);      //get the middle of the list
+  Key* sHalf = middle->getPrev();
+  middle->setPrev(NULL);   //split the list into two halfs
+
+  return merge(merge_sort(head), merge_sort(sHalf)); //recurse on that
+}
+
+
+
 
 int main()
 {
@@ -82,7 +87,7 @@ int main()
   // sort all data
   // todo: call your sort method(s) here!
   //std::cout << k.getValuePtr()->getPrev()->getPrev()->getPrev()->getText();
-  quickSort(&k);
+  merge_sort(&k);
   k.print();
 
   // save sorted data into a new file called sorted.bin
