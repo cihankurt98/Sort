@@ -3,129 +3,118 @@
 #include "FileStructure.h"
 #include "Key.h"
 
-
-Key* mergeLists(Key* a, Key* b)
+Key* SortedMerge(Key* a, Key* b)
 {
-  Key* mergedList = NULL;
-
   if (a == NULL)
-   {
+  {
     return b;
   }
   else if (b == NULL)
   {
     return a;
   }
-  std::cout << a->getText() << b->getText() << std::endl;
-if (a->getText() <= b->getText())
-{
-  mergedList = a;
-  mergedList->setPrev(mergeLists(a->getPrev(), b));
-}
-else
-{
-  mergedList = b;
-  mergedList->setPrev(mergeLists(a, b->getPrev()));
-}
-return mergedList;
 
-}
+  Key* result = NULL;
 
-Key* findMiddle(Key* head)
-{
-  if (head == NULL)
+  //vergelijken
+  if (a->getText() <= b->getText())
   {
-    return NULL;
+    result = a;
+    result->setPrev(SortedMerge(a->getPrev(), b));
   }
-  Key* slow = head;
-  Key* fast = head;
-
-  while (fast != NULL && fast->getPrev() != NULL)
+  else
   {
-    fast = fast->getPrev()->getPrev();
-    slow = slow->getPrev();
-  }
-  return slow;
-}
-//Finding the middle element of the list for splitting
-void split(Key* head, Key* first, Key* second)
-{
-  if (head == NULL || head->getPrev() == NULL)
-  {
-    first = head;
-    second = NULL;
+    result = b;
+    result->setPrev(SortedMerge(a, b->getPrev()));
   }
 
-  Key* middle = findMiddle(head);
-
-  if (middle == NULL)
-  {
-    middle = second;
-  }
-  if (first == NULL)
-  {
-    std::cout<< "error prevention" << std::endl;
-  }
-  first = head;
-  std::cout << first->getText() << std::endl;
-  second = middle->getPrev();
-  middle->setPrev(NULL);
-    first->print();
-    second->print();
+  return result;
 }
 
-void mergeSort(Key* head)
+void Split(Key* source, Key** frontRef, Key** backRef)
 {
-  Key* tempHead = head;
-  Key* a = NULL;
-  Key* b = NULL;
+  if (source == NULL || source->getPrev() == NULL)
+  {
+    *frontRef = source;
+    *backRef = NULL;
+    return;
+  }
 
-  if (tempHead == NULL || tempHead->getPrev() == NULL)
+  Key* slow = source;
+  Key* fast = source->getPrev();
+
+  while (fast != NULL)
+  {
+    fast = fast->getPrev();
+    if (fast != NULL)
+    {
+      slow = slow->getPrev();
+      fast = fast->getPrev();
+    }
+  }
+
+  *frontRef = source;
+  *backRef = slow->getPrev();
+  slow->setPrev(NULL);
+}
+
+void MergeSort(Key* headRef)
+{
+  if (headRef == NULL || (headRef)->getPrev() == NULL)
   {
     return;
   }
 
-  split(tempHead, a, b);
-  mergeSort(a);
-  mergeSort(b);
-  head = mergeLists(a, b);
+  Key *a, *b;
+
+  Split(headRef, &a, &b);
+
+  MergeSort(a);
+  MergeSort(b);
+
+  headRef = SortedMerge(a, b);
 
 }
-
 
 
 int main()
 {
   FileStructure f;
   Key head;
-  // f.loadFile("data/gibberish.bin", head);
+  //f.loadFile("data/gibberish.bin", head);
 
   Key k;
-  k.addValue("calculator");
-  k.addValue("eik");
-  k.addValue("einsteinium");
-  k.addValue("eik");
-  k.addValue("ei");
-  k.addValue("eieren");
-  k.addValue("eigendom");
-  k.addValue("taxibaan");
-  k.addValue("tafel");
- 
+
+k.addValue("GG");
+k.addValue("CC");
+k.addValue("AA");
+k.addValue("EE");
+k.addValue("BB");
+k.addValue("HH");
+k.addValue("DD");
+k.addValue("FF");
+k.addValue("CC");
+
+
+
 
   // next line is only to show what kind of data we're working with
   // remove this line to increase performance!
   //head.print();
-  k.print();
+  //k.print();
   std::cout << std::endl;
 
   // sort all data
   // todo: call your sort method(s) here!
   //std::cout << k.getValuePtr()->getPrev()->getPrev()->getPrev()->getText();
-  mergeSort(&k);
+  MergeSort(&k);
+   k.print();
 
 
   // save sorted data into a new file called sorted.bin
   f.saveFile(head, "sorted.bin");
+
+ 
 
   return 0;
 }
