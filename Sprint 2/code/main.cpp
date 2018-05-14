@@ -1,21 +1,14 @@
-#include <iostream>
-
 #include "FileStructure.h"
+#include "Value.h"
 #include "Key.h"
 
 template<typename T>
 T* Merge(T* firstNode, T* secondNode)
 {
-  if (firstNode == NULL)
-  {
-    return secondNode;
-  }
-  else if (secondNode == NULL)
-  {
-    return firstNode;
-  }
+  if (firstNode == NULL) return secondNode;
+  else if (secondNode == NULL) return firstNode;
 
-  else if (firstNode->getText() >= secondNode->getText()) //if I reverse the sign to >=, the behavior reverses
+  else if (firstNode->getText() >= secondNode->getText())
   {
     firstNode->setPrev(Merge(firstNode->getPrev(), secondNode));
     return firstNode;
@@ -30,17 +23,9 @@ T* Merge(T* firstNode, T* secondNode)
 template<typename T>
 T* Split(T* my_node)
 {
-  T* secondNode;
-
-  if (my_node == NULL)
-  {
-    return NULL;
-  }
-  else if (my_node->getPrev() == NULL)
-  {
-    return NULL;
-  }
-  secondNode = my_node->getPrev();
+  if (my_node == NULL)return NULL;
+  else if (my_node->getPrev() == NULL)return NULL;
+  T* secondNode = my_node->getPrev();
   my_node->setPrev(secondNode->getPrev());
   secondNode->setPrev(Split(secondNode->getPrev()));
   return secondNode;
@@ -49,33 +34,21 @@ T* Split(T* my_node)
 template<typename T>
 T* MergeSort(T* my_node)
 {
-  T* secondNode;
-
-  if (my_node == NULL)
-  {
-    return NULL;
-  }
-  else if (my_node->getPrev() == NULL)
-  {
-    return my_node;
-  }
-  secondNode = Split(my_node);
-  return Merge(MergeSort(my_node), MergeSort(secondNode));
+  if (my_node == NULL) return NULL;
+  else if (my_node->getPrev() == NULL) return my_node;
+  return Merge(MergeSort(my_node), MergeSort(Split(my_node)));
 }
-
-
 
 
 int main()
 {
   FileStructure f;
-  Key head;
-  f.loadFile("data/gibberish.bin", head);
+  Key* head = new Key();
+  f.loadFile("data/gibberish.bin", *head);
 
-
-
-  Key* newHead = MergeSort(&head);
+  Key* newHead = MergeSort(head);
   Key* tempHead = newHead;
+
   while (tempHead != NULL)
   {
     Value* value = MergeSort(tempHead->getValuePtr());
@@ -85,6 +58,8 @@ int main()
   // save sorted data into a new file called sorted.bin
   f.saveFile(*newHead, "sorted.bin");
 
+  delete newHead;
+  newHead = NULL;
 
   return 0;
 }
