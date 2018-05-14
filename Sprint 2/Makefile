@@ -4,7 +4,7 @@ LDDFLAGS=-lmyhash -lmyfilestructure -lpthread
 MAIN_SOURCES=$(wildcard code/*.cpp)
 MAIN_LIBS=-Llib
 
-TEST_LIBS=-lgtest -lgtest_main -lpthread
+TEST_LIBS=-lgtest -lgtest_main
 
 CC=g++
 
