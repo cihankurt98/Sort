@@ -38,8 +38,6 @@ class Key
         Key* getPrev();
         // post: pointer to the prev key is returned
 
-        void print() const;
-        // post: all keys and values are recursively printed
         
     private:
         std::string key;
