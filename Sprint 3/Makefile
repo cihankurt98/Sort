@@ -1,5 +1,5 @@
-CFLAGS=-Wall -Werror -Wextra -pedantic -O0 -ggdb -fopenmp -std=c++98 -Icode
-LDDFLAGS=-lmyhash -lmyfilestructure -lpthread
+CFLAGS=-Wall -Werror -Wextra -pedantic -O3 -ggdb -fopenmp -std=c++98 -Icode
+LDDFLAGS=-lmyfilestructure -lpthread
 
 MAIN_SOURCES=$(wildcard code/*.cpp)
 MAIN_LIBS=-Llib
