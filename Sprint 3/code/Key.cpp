@@ -1,5 +1,4 @@
 #include "Key.h"
-#include <string>
 
 Key::Key()
 {
@@ -34,11 +33,12 @@ bool Key::setText(std::string key)
 
 void Key::addValue(std::string word)
 {
-	if (key == word.substr(0, 2))
+	std::string tempstr = word.substr(0, 2);
+	if (key == tempstr)
 	{
-		Value* value = new Value(word);;
-		value->setPrev(valueTail);
-		valueTail = value;
+		Value *temp = valueTail;
+		valueTail = new Value(word);
+		valueTail->setPrev(temp);
 		return;
 	}
 	else if (prevKey != NULL)
@@ -46,11 +46,9 @@ void Key::addValue(std::string word)
 		prevKey->addValue(word);
 		return;
 	}
-	Value *value = new Value(word);
 	Key *newKey = new Key();
 	newKey->setText(word.substr(0, 2));
-	newKey->prevKey = NULL;
-	newKey->valueTail = value;
+	newKey->valueTail = new Value(word);
 	prevKey = newKey;
 }
 

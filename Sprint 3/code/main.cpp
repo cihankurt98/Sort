@@ -22,7 +22,7 @@ T* Merge(T* firstNode, T* secondNode)
 template<typename T>
 T* Split(T* my_node)
 {
-  if (my_node == NULL || my_node->getPrev() == NULL )return NULL;
+  if (my_node == NULL || my_node->getPrev() == NULL ) return NULL;
   T* secondNode = my_node->getPrev();
   my_node->setPrev(secondNode->getPrev());
   secondNode->setPrev(Split(secondNode->getPrev()));

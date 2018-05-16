@@ -2,6 +2,7 @@
 #define KEY_H
 
 #include "Value.h"
+#include <string.h>
 
 class Key
 {

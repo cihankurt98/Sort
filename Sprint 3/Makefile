@@ -1,10 +1,10 @@
 CFLAGS=-Wall -Werror -Wextra -pedantic -O3 -ggdb -fopenmp -std=c++98 -Icode
-LDDFLAGS=-lmyfilestructure -lpthread
+LDDFLAGS=-lmyfilestructure
 
 MAIN_SOURCES=$(wildcard code/*.cpp)
 MAIN_LIBS=-Llib
 
-TEST_LIBS=-lgtest -lgtest_main -lpthread
+TEST_LIBS=-lgtest -lgtest_main
 
 CC=g++
 
