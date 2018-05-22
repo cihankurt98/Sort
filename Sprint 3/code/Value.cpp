@@ -12,27 +12,13 @@ Value::~Value()
 	//prev = NULL;
 }
 
-void Value::setText(std::string value)
-{
-	word = value;
-}
-
-std::string Value::getText() const
-{
-	return word;
-}
 
 Value* Value::getPrev()
 {
 	return prev;
 }
 
-void Value::setPrev(Value* prev)
+std::string Value::getText() const
 {
-	this->prev = prev;
-}
-
-void Value::print() const
-{
-	return;
+	return word;
 }

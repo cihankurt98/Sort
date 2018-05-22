@@ -2,7 +2,6 @@
 #define KEY_H
 
 #include "Value.h"
-#include <string.h>
 
 class Key
 {
@@ -14,10 +13,21 @@ public:
     virtual ~Key();
     // post: recursively deletes all keys and values
 
-    std::string getText() const;
+    inline std::string getText() const
+    {
+        return key;
+    }
     // post: current key value is returned
 
-    bool setText(std::string key);
+    inline bool setText(std::string key)
+    {
+        if (key.length() >= 2)
+        {
+            this->key = key;
+            return true;
+        }
+        return false;
+    }
     // post: if key length equals 2 the key value is set and true is returned,
     //       else key is ignored and false is returned
 
@@ -30,16 +40,25 @@ public:
     Value* getValuePtr();
     // post: pointer to this key's first value is returned
 
-    void setValuePtr(Value* value);
+    void setValuePtr(Value* value)
+    {
+        valueTail = value;
+    }
     // post: pointer to this key's first value is set
 
-    void setPrev(Key* prev);
+    void setPrev(Key* prev)
+    {
+        prevKey = prev;
+    }
     // post: pointer to the prev key is set
 
     Key* getPrev();
     // post: pointer to the prev key is returned
 
-    void print() const;
+    inline void print() const
+    {
+        return;
+    }
     // post: all keys and values are recursively printed
 
 

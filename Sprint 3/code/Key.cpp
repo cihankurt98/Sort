@@ -16,20 +16,7 @@ Key::~Key()
 	//prevKey = NULL;
 }
 
-std::string Key::getText() const
-{
-	return key;
-}
 
-bool Key::setText(std::string key)
-{
-	if (key.length() >= 2)
-	{
-		this->key = key;
-		return true;
-	}
-	return false;
-}
 
 void Key::addValue(std::string word)
 {
@@ -41,7 +28,7 @@ void Key::addValue(std::string word)
 		valueTail->setPrev(temp);
 		return;
 	}
-	else if (prevKey != NULL)
+	else if (prevKey)
 	{
 		prevKey->addValue(word);
 		return;
@@ -57,22 +44,8 @@ Value* Key::getValuePtr()
 	return valueTail;
 }
 
-void Key::setValuePtr(Value* value)
-{
-	valueTail = value;
-}
-
 Key* Key::getPrev()
 {
 	return prevKey;
 }
 
-void Key::print() const
-{
-	return;
-}
-
-void Key::setPrev(Key* prev)
-{
-	prevKey = prev;
-}
