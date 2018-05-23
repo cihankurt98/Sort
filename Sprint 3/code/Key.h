@@ -6,7 +6,12 @@
 class Key
 {
 public:
-    Key();
+    inline Key()
+    {
+        prevKey = NULL;
+        valueTail = NULL;
+        //key = "";
+    }
     // post: Key is properly initialised, however the key value
     //       is illegal (empty)
 
@@ -17,7 +22,6 @@ public:
     {
         return key;
     }
-    // post: current key value is returned
 
     inline bool setText(std::string key)
     {
@@ -28,8 +32,6 @@ public:
         }
         return false;
     }
-    // post: if key length equals 2 the key value is set and true is returned,
-    //       else key is ignored and false is returned
 
     void addValue(std::string word);
     // post: a new word is added to the correct key:
@@ -37,29 +39,30 @@ public:
     //       - if the word doesn't fit in this key, addValue is called on the next key
     //       - if no fitting key is found, a new key is made with this value in it
 
-    Value* getValuePtr();
-    // post: pointer to this key's first value is returned
+    inline Value* getValuePtr()
+    {
+        return valueTail;
+    }
 
-    void setValuePtr(Value* value)
+    inline void setValuePtr(Value* value)
     {
         valueTail = value;
     }
-    // post: pointer to this key's first value is set
 
-    void setPrev(Key* prev)
+    inline void setPrev(Key* prev)
     {
         prevKey = prev;
     }
-    // post: pointer to the prev key is set
 
-    Key* getPrev();
-    // post: pointer to the prev key is returned
+    inline Key* getPrev()
+    {
+        return prevKey;
+    }
 
     inline void print() const
     {
         return;
     }
-    // post: all keys and values are recursively printed
 
 
 private:

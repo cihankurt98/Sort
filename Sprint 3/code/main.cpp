@@ -4,8 +4,8 @@
 template<typename T>
 T* Merge(T* firstNode, T* secondNode)
 {
-  if (firstNode == NULL) return secondNode;
-  else if (secondNode == NULL) return firstNode;
+  if (!firstNode) return secondNode;
+  else if (!secondNode) return firstNode;
 
   else if (firstNode->getText() >= secondNode->getText())
   {
@@ -22,7 +22,7 @@ T* Merge(T* firstNode, T* secondNode)
 template<typename T>
 T* Split(T* my_node)
 {
-  if (my_node == NULL || my_node->getPrev() == NULL ) return NULL;
+  if (!my_node || !my_node->getPrev()) return NULL;
   T* secondNode = my_node->getPrev();
   my_node->setPrev(secondNode->getPrev());
   secondNode->setPrev(Split(secondNode->getPrev()));
@@ -32,31 +32,30 @@ T* Split(T* my_node)
 template<typename T>
 T* MergeSort(T* my_node)
 {
-  if (my_node == NULL) return NULL;
-  else if (my_node->getPrev() == NULL) return my_node;
+  if (!my_node) return NULL;
+  else if (!my_node->getPrev()) return my_node;
   return Merge(MergeSort(my_node), MergeSort(Split(my_node)));
 }
 
 
-int main()
+int main(void)
 {
   FileStructure f;
   Key* head = new Key();
   f.loadFile("data/gibberish.bin", *head);
 
-  Key* newHead = MergeSort(head);
-  Key* tempHead = newHead;
+  head = MergeSort(head);
+  Key* tempHead = head; //values
 
-  while (tempHead != NULL)
+  while (tempHead)
   {
-    Value* value = MergeSort(tempHead->getValuePtr());
-    tempHead->setValuePtr(value);
+    tempHead->setValuePtr(MergeSort(tempHead->getValuePtr()));
     tempHead = tempHead->getPrev();
   }
   // save sorted data into a new file called sorted.bin
-  f.saveFile(*newHead, "sorted.bin");
+  f.saveFile(*head, "sorted.bin");
 
-  delete newHead;
+  delete head;
   //newHead = NULL;
 
   return 0;

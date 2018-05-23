@@ -6,12 +6,19 @@
 class Value
 {
 public:
-    Value(std::string word);
+    inline Value(std::string word)
+    {
+        this->word = word;
+        prev = NULL;
+    }
     // post: Value is properly initialised with word as value
     virtual ~Value();
     // empty virtual destructor
 
-    std::string getText() const;
+    inline std::string getText() const
+    {
+        return word;
+    }
     // post: current value is returned
 
     inline void setText(std::string value)
@@ -20,7 +27,10 @@ public:
     }
     // post: value is updated with new value
 
-    Value* getPrev();
+    inline Value* getPrev()
+    {
+        return prev;
+    }
     // post: pointer to prev value is returned
 
     inline void setPrev(Value* prev)

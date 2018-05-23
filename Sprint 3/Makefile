@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Werror -Wextra -pedantic -O3 -ggdb -fopenmp -std=c++98 -Icode
+CFLAGS= -Wall -Werror -Wextra -pedantic -O3 -ggdb -fopenmp -std=c++98 -Icode
 LDDFLAGS=-lmyfilestructure
 
 MAIN_SOURCES=$(wildcard code/*.cpp)
@@ -6,12 +6,12 @@ MAIN_LIBS=-Llib
 
 TEST_LIBS=-lgtest -lgtest_main
 
-CC=g++
+CC=g++ -pg
 
 .phony: all clean install submit
 
 sort: $(MAIN_OBJECTS) Makefile code/FileStructure.h
-	@$(CC) $(CFLAGS) $(MAIN_LIBS) $(MAIN_SOURCES) -o $@ $(LDDFLAGS)
+	$(CC) $(CFLAGS) $(MAIN_LIBS) $(MAIN_SOURCES) -o $@ $(LDDFLAGS)
 	
 all: sort
 
