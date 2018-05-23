@@ -6,7 +6,7 @@
 class Value
 {
 public:
-    inline Value(std::string word)
+    inline Value(const std::string& word)
     {
         this->word = word;
         prev = NULL;
@@ -15,13 +15,13 @@ public:
     virtual ~Value();
     // empty virtual destructor
 
-    inline std::string getText() const
+    inline const std::string& getText() const
     {
         return word;
     }
     // post: current value is returned
 
-    inline void setText(std::string value)
+    inline void setText(const std::string& value)
     {
         word = value;
     }

@@ -12,11 +12,8 @@ T* Merge(T* firstNode, T* secondNode)
     firstNode->setPrev(Merge(firstNode->getPrev(), secondNode));
     return firstNode;
   }
-  else
-  {
-    secondNode->setPrev(Merge(firstNode, secondNode->getPrev()));
-    return secondNode;
-  }
+  secondNode->setPrev(Merge(firstNode, secondNode->getPrev()));
+  return secondNode;
 }
 
 template<typename T>
@@ -52,6 +49,7 @@ int main(void)
     tempHead->setValuePtr(MergeSort(tempHead->getValuePtr()));
     tempHead = tempHead->getPrev();
   }
+
   // save sorted data into a new file called sorted.bin
   f.saveFile(*head, "sorted.bin");
 

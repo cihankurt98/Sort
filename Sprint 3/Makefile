@@ -6,7 +6,7 @@ MAIN_LIBS=-Llib
 
 TEST_LIBS=-lgtest -lgtest_main
 
-CC=g++ -pg
+CC=g++
 
 .phony: all clean install submit
 

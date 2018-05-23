@@ -18,12 +18,12 @@ public:
     virtual ~Key();
     // post: recursively deletes all keys and values
 
-    inline std::string getText() const
+    inline const std::string& getText() const
     {
         return key;
     }
 
-    inline bool setText(std::string key)
+    bool setText(const std::string& key)
     {
         if (key.length() >= 2)
         {
@@ -33,7 +33,7 @@ public:
         return false;
     }
 
-    void addValue(std::string word);
+    void addValue(const std::string& word);
     // post: a new word is added to the correct key:
     //       - if the word fits in this key, a new value is added to the valuelist
     //       - if the word doesn't fit in this key, addValue is called on the next key

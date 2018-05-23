@@ -9,7 +9,7 @@ Key::~Key()
 	//prevKey = NULL;
 }
 
-void Key::addValue(std::string word)
+void Key::addValue(const std::string& word)
 {
 	if (key == word.substr(0, 2))
 	{
@@ -18,7 +18,7 @@ void Key::addValue(std::string word)
 		valueTail->setPrev(temp);
 		return;
 	}
-	else if (prevKey)
+	if (prevKey)
 	{
 		prevKey->addValue(word);
 		return;
